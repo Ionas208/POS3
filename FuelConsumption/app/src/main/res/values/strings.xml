@@ -1,0 +1,8 @@
+<resources>
+    <string name="app_name">FuelConsumption</string>
+    <string name="title">Fuel Consumption</string>
+    <string name="fIl">Fuel in liter:</string>
+    <string name="dIkm">Distance in km:</string>
+    <string name="calc">Calculate</string>
+    <string name="cons">Consumption: </string>
+</resources>

@@ -1,0 +1,10 @@
+<resources>
+    <string name="app_name">CurrencyConverter</string>
+    <string name="title">Currency Converter</string>
+    <string name="euro">Euro</string>
+    <string name="dollar">Dollar</string>
+    <string name="euroPreText">1 €</string>
+    <string name="dollarPreText">1 $</string>
+    <string name="dollarPreOutText">1.00$ are 0.91$</string>
+    <string name="euroPreOutText">1.00€ are 1.10€</string>
+</resources>

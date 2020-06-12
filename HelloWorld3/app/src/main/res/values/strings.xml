@@ -1,0 +1,5 @@
+<resources>
+    <string name="app_name">HelloWorld3</string>
+    <string name="outputmessage">Hello %s - nice to meet you</string>
+    <string name="finished">Finished</string>
+</resources>
