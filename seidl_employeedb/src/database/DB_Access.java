@@ -70,11 +70,22 @@ public class DB_Access {
         return departments;
     }
 
-    public ResultSet getEmployess() throws SQLException {
+    public ResultSet getEmployess(boolean filterByDept, boolean filterByGender, boolean filterByDate, String dept, String gender, LocalDate date) throws SQLException {
         String sqlString = "SELECT e.emp_no, e.first_name, e.last_name, e.gender, e.birth_date, e.hire_date, de.from_date, de.to_date, d.dept_name\n"
                 + "FROM employees e\n"
                 + "INNER JOIN dept_emp de ON e.emp_no = de.emp_no\n"
-                + "INNER JOIN departments d ON de.dept_no = d.dept_no";
+                + "INNER JOIN departments d ON de.dept_no = d.dept_no\n"
+                + "WHERE 1=1";
+        if(filterByDept && !dept.equals("")){
+            sqlString += String.format("\nAND d.dept_name = '%s'", dept);
+        }
+        if(filterByGender){
+            sqlString += String.format("\nAND e.gender = '%s'", gender.toUpperCase());
+        }
+        if(filterByDate){
+            sqlString += String.format("\nAND e.birth_date <= '%s'::date", date.toString());
+        }
+        sqlString += "\nORDER BY e.last_name, e.first_name, e.birth_date, hire_date;";
         Statement statement = db.getScrollableStatement();
         ResultSet rs = statement.executeQuery(sqlString);
         db.releaseStatement(statement);

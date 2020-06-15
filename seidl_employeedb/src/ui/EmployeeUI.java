@@ -206,7 +206,23 @@ public class EmployeeUI extends javax.swing.JFrame {
                 filterByDate = false;
                 cbDateBefore.setSelected(false);
             }
-            etm.filter(filterByDept, filterByGender, filterByDate, cbDept.getSelectedItem().toString(), cbMale.isSelected(), cbFemale.isSelected(), date);
+            String gender = "";
+            if(cbMale.isSelected() && cbFemale.isSelected()){
+                filterByGender = false;
+            }
+            else if(cbMale.isSelected()){
+                gender = "M";
+                filterByGender = true;
+            }
+            else if(cbFemale.isSelected()){
+                gender = "F";
+                filterByGender = true;
+            }
+            try {
+                etm.filter(filterByDept, filterByGender, filterByDate, cbDept.getSelectedItem().toString(), gender, date);
+            } catch (SQLException ex) {
+                JOptionPane.showMessageDialog(this, "Unable to filter employees!");
+            }
         }
     }
     
