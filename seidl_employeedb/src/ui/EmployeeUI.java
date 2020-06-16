@@ -16,8 +16,13 @@ import java.util.Date;
 import java.util.List;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+import javafx.scene.chart.Axis;
+import javafx.scene.chart.XYChart;
+import javafx.scene.chart.XYChartBuilder;
 import javax.swing.JOptionPane;
 import javax.swing.RowSorter;
+import javax.swing.event.ListSelectionEvent;
+import javax.swing.event.ListSelectionListener;
 import javax.swing.table.TableModel;
 import javax.swing.table.TableRowSorter;
 
@@ -35,10 +40,11 @@ public class EmployeeUI extends javax.swing.JFrame {
     private boolean filterByDept = false;
     private boolean filterByGender = false;
     private boolean filterByDate = false;
-    
 
     public EmployeeUI() {
         initComponents();
+        this.setSize(1200, 600);
+        this.setLocationRelativeTo(null);
         dba = DB_Access.getInstance();
         try {
             dba.connect();
@@ -64,7 +70,23 @@ public class EmployeeUI extends javax.swing.JFrame {
         }
         tbTable.setModel(etm);
         tbTable.setAutoCreateRowSorter(true);
-
+        tbTable.removeColumn(tbTable.getColumn("ID"));
+        tbTable.getSelectionModel().addListSelectionListener(new ListSelectionListener() {
+            public void valueChanged(ListSelectionEvent event) {
+                int emp_no = Integer.parseInt(((tbTable.getModel()).getValueAt(tbTable.getSelectedRow(), 4)) + "");
+                List<String> history = null;
+                try {
+                    history = dba.getSalaryHistory(emp_no);
+                } catch (SQLException ex) {
+                    ex.printStackTrace();
+                }
+                String displayText = "<html>";
+                for (String h : history) {
+                    displayText += h + "\n";
+                }
+                lbSalHistory.setText(displayText += "</html>");
+            }
+        });
     }
 
     /**
@@ -89,9 +111,12 @@ public class EmployeeUI extends javax.swing.JFrame {
         jPanel2 = new javax.swing.JPanel();
         jScrollPane1 = new javax.swing.JScrollPane();
         tbTable = new javax.swing.JTable();
+        jPanel5 = new javax.swing.JPanel();
+        jPanel6 = new javax.swing.JPanel();
+        lbSalHistory = new javax.swing.JLabel();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
-        getContentPane().setLayout(new java.awt.GridLayout(1, 2));
+        getContentPane().setLayout(new java.awt.GridLayout(1, 3));
 
         jPanel1.setLayout(new java.awt.GridLayout(2, 1));
 
@@ -164,6 +189,17 @@ public class EmployeeUI extends javax.swing.JFrame {
 
         getContentPane().add(jPanel2);
 
+        jPanel5.setBorder(javax.swing.BorderFactory.createTitledBorder("Statistics"));
+        jPanel5.setLayout(new java.awt.GridLayout(1, 1));
+
+        jPanel6.setBorder(javax.swing.BorderFactory.createTitledBorder("Salary History"));
+        jPanel6.setLayout(new java.awt.BorderLayout());
+        jPanel6.add(lbSalHistory, java.awt.BorderLayout.CENTER);
+
+        jPanel5.add(jPanel6);
+
+        getContentPane().add(jPanel5);
+
         pack();
     }// </editor-fold>//GEN-END:initComponents
 
@@ -174,20 +210,18 @@ public class EmployeeUI extends javax.swing.JFrame {
     }//GEN-LAST:event_onFilterByDept
 
     private void onGender(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_onGender
-        if(cbMale.isSelected() && cbFemale.isSelected()){
+        if (cbMale.isSelected() && cbFemale.isSelected()) {
             filterByGender = false;
-        }
-        else{
+        } else {
             filterByGender = true;
         }
         filter();
     }//GEN-LAST:event_onGender
 
     private void onDateBefore(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_onDateBefore
-        if(cbDateBefore.isSelected()){
+        if (cbDateBefore.isSelected()) {
             filterByDate = true;
-        }
-        else{
+        } else {
             filterByDate = false;
         }
         filter();
@@ -196,25 +230,22 @@ public class EmployeeUI extends javax.swing.JFrame {
     private void filter() {
         if (etm != null) {
             LocalDate date = null;
-            try{
+            try {
                 date = dpDate.getDate().toInstant().atZone(ZoneId.systemDefault()).toLocalDate();
-            }
-            catch(NullPointerException ex){
-                if(filterByDate){
+            } catch (NullPointerException ex) {
+                if (filterByDate) {
                     JOptionPane.showMessageDialog(this, "Please select a valid Date!");
                 }
                 filterByDate = false;
                 cbDateBefore.setSelected(false);
             }
             String gender = "";
-            if(cbMale.isSelected() && cbFemale.isSelected()){
+            if (cbMale.isSelected() && cbFemale.isSelected()) {
                 filterByGender = false;
-            }
-            else if(cbMale.isSelected()){
+            } else if (cbMale.isSelected()) {
                 gender = "M";
                 filterByGender = true;
-            }
-            else if(cbFemale.isSelected()){
+            } else if (cbFemale.isSelected()) {
                 gender = "F";
                 filterByGender = true;
             }
@@ -225,8 +256,8 @@ public class EmployeeUI extends javax.swing.JFrame {
             }
         }
     }
-    
-    private void displayManagement(){
+
+    private void displayManagement() {
         try {
             String dept_no = ((Department) cbDept.getSelectedItem()).getDept_no();
             List<Manager> managers = dba.getManagement(dept_no);
@@ -235,11 +266,12 @@ public class EmployeeUI extends javax.swing.JFrame {
                 displayText += String.format("<span style='text-align: left'><b>%s, %s</b>:</span> "
                         + "<span style='text-align: right'>from <span style='color: red'>%s</span> to <span style='color: red'>%s</span><span><br>", m.getLast_name(), m.getFirst_name(), m.getFrom_date(), m.getTo_Date());
             }
-            lbManagement.setText(displayText+="</html>");
+            lbManagement.setText(displayText += "</html>");
         } catch (SQLException ex) {
             JOptionPane.showMessageDialog(this, "Unable to load Management!");
         }
     }
+    
 
     /**
      * @param args the command line arguments
@@ -286,9 +318,12 @@ public class EmployeeUI extends javax.swing.JFrame {
     private javax.swing.JPanel jPanel2;
     private javax.swing.JPanel jPanel3;
     private javax.swing.JPanel jPanel4;
+    private javax.swing.JPanel jPanel5;
+    private javax.swing.JPanel jPanel6;
     private javax.swing.JScrollPane jScrollPane1;
     private javax.swing.JLabel lbDept;
     private javax.swing.JLabel lbManagement;
+    private javax.swing.JLabel lbSalHistory;
     private javax.swing.JTable tbTable;
     // End of variables declaration//GEN-END:variables
 }

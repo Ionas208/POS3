@@ -88,9 +88,8 @@ public class DB_Access {
         sqlString += "\nORDER BY e.last_name, e.first_name, e.birth_date, hire_date;";
         Statement statement = db.getScrollableStatement();
         ResultSet rs = statement.executeQuery(sqlString);
-        db.releaseStatement(statement);
+        //db.releaseStatement(statement); NOT WORKING WITH THIS
         return rs;
-
     }
 
     public List<Manager> getManagement(String dept_no) throws SQLException {
@@ -112,4 +111,25 @@ public class DB_Access {
         return managers;
     }
 
+    public List<String> getSalaryHistory(int emp_no) throws SQLException{
+        List<String> history = new ArrayList<>();
+        
+        String sqlString = "SELECT salary, from_date, to_date FROM salaries WHERE emp_no = "+emp_no+" ORDER BY from_date";
+        Statement statement = db.getStatement();
+        ResultSet rs = statement.executeQuery(sqlString);
+        while(rs.next()){
+            int salary = rs.getInt("salary");
+            LocalDate from_date = rs.getDate("from_date").toLocalDate();
+            LocalDate to_date = rs.getDate("to_date").toLocalDate();
+            String displaytext =
+                    String.format("<span style='text-align: left'><b>%s$</b>:</span> "
+                        + "<span style='text-align: right'>from <span style='color: red'>"
+                            + "%s</span> to <span style='color: red'>%s</span><span><br>", salary+"", from_date, to_date);
+            history.add(displaytext);
+        }
+        
+        db.releaseStatement(statement);
+        
+        return history;
+    }
 }

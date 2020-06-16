@@ -5,8 +5,8 @@
         <group>
             <file>file:/C:/Users/10jon/Desktop/POS3/seidl_employeedb/src/bl/EmployeeTableModel.java</file>
             <file>file:/C:/Users/10jon/Desktop/POS3/seidl_employeedb/src/ui/EmployeeUI.java</file>
-            <file>file:/C:/Users/10jon/Desktop/POS3/seidl_employeedb/src/res/dbConnect.properties</file>
             <file>file:/C:/Users/10jon/Desktop/POS3/seidl_employeedb/src/database/DB_Access.java</file>
+            <file>file:/C:/Users/10jon/Desktop/POS3/seidl_employeedb/src/database/DB_CachedConnection.java</file>
         </group>
     </open-files>
 </project-private>

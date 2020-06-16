@@ -28,7 +28,8 @@ public class EmployeeTableModel extends AbstractTableModel {
 
     private ResultSet rs;
     private DB_Access dba = DB_Access.getInstance();
-    private List<String> colNames = Arrays.asList("Name", "Gender", "Birthdate", "Hiredate");
+    private List<String> colNames = Arrays.asList("Name", "Gender", "Birthdate", "Hiredate", "ID");
+    private int length = 0;
 
     public EmployeeTableModel() throws SQLException {
         rs = dba.getEmployess(false, false, false, null, null, null);
@@ -38,9 +39,9 @@ public class EmployeeTableModel extends AbstractTableModel {
     public int getRowCount() {
         try {
             rs.last();
+            length = rs.getRow();
             return rs.getRow();
         } catch (SQLException ex) {
-            ex.printStackTrace();
             return 0;
         }
     }
@@ -63,6 +64,8 @@ public class EmployeeTableModel extends AbstractTableModel {
                     return rs.getDate("birth_date").toLocalDate().toString();
                 case 3:
                     return rs.getDate("hire_date").toLocalDate().toString();
+                case 4:
+                    return rs.getInt("emp_no");
                 default:
                     return "error";
             }
