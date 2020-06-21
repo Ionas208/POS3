@@ -73,18 +73,20 @@ public class EmployeeUI extends javax.swing.JFrame {
         tbTable.removeColumn(tbTable.getColumn("ID"));
         tbTable.getSelectionModel().addListSelectionListener(new ListSelectionListener() {
             public void valueChanged(ListSelectionEvent event) {
-                int emp_no = Integer.parseInt(((tbTable.getModel()).getValueAt(tbTable.getSelectedRow(), 4)) + "");
-                List<String> history = null;
-                try {
-                    history = dba.getSalaryHistory(emp_no);
-                } catch (SQLException ex) {
-                    ex.printStackTrace();
+                if (etm.allowed) {
+                    int emp_no = Integer.parseInt(((tbTable.getModel()).getValueAt(tbTable.getSelectedRow(), 4)) + "");
+                    List<String> history = null;
+                    try {
+                        history = dba.getSalaryHistory(emp_no);
+                    } catch (SQLException ex) {
+                        ex.printStackTrace();
+                    }
+                    String displayText = "<html>";
+                    for (String h : history) {
+                        displayText += h + "\n";
+                    }
+                    lbSalHistory.setText(displayText += "</html>");
                 }
-                String displayText = "<html>";
-                for (String h : history) {
-                    displayText += h + "\n";
-                }
-                lbSalHistory.setText(displayText += "</html>");
             }
         });
     }
@@ -210,6 +212,7 @@ public class EmployeeUI extends javax.swing.JFrame {
     }//GEN-LAST:event_onFilterByDept
 
     private void onGender(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_onGender
+
         if (cbMale.isSelected() && cbFemale.isSelected()) {
             filterByGender = false;
         } else {
@@ -271,7 +274,6 @@ public class EmployeeUI extends javax.swing.JFrame {
             JOptionPane.showMessageDialog(this, "Unable to load Management!");
         }
     }
-    
 
     /**
      * @param args the command line arguments

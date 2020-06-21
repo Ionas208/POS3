@@ -29,7 +29,7 @@ public class EmployeeTableModel extends AbstractTableModel {
     private ResultSet rs;
     private DB_Access dba = DB_Access.getInstance();
     private List<String> colNames = Arrays.asList("Name", "Gender", "Birthdate", "Hiredate", "ID");
-    private int length = 0;
+    public boolean allowed = true;
 
     public EmployeeTableModel() throws SQLException {
         rs = dba.getEmployess(false, false, false, null, null, null);
@@ -39,7 +39,6 @@ public class EmployeeTableModel extends AbstractTableModel {
     public int getRowCount() {
         try {
             rs.last();
-            length = rs.getRow();
             return rs.getRow();
         } catch (SQLException ex) {
             return 0;
@@ -67,7 +66,7 @@ public class EmployeeTableModel extends AbstractTableModel {
                 case 4:
                     return rs.getInt("emp_no");
                 default:
-                    return "error";
+                    return 0;
             }
         } catch (SQLException ex) {
             ex.printStackTrace();
@@ -77,7 +76,9 @@ public class EmployeeTableModel extends AbstractTableModel {
 
     public void filter(boolean filterByDept, boolean filterByGender, boolean filterByDate, String deptname, String gender, LocalDate dateBefore) throws SQLException {
         rs = dba.getEmployess(filterByDept, filterByGender, filterByDate, deptname, gender, dateBefore);
+        allowed = false;
         this.fireTableDataChanged();
+        allowed = true;
     }
 
     @Override
@@ -105,7 +106,7 @@ public class EmployeeTableModel extends AbstractTableModel {
                 case 1:
                     String gender = (String)aValue;
                     if((gender.toUpperCase()).equals("M") ||(gender.toUpperCase()).equals("F")){
-                        /*rs.updateString("gender", gender+"::employees_gender_enum");
+                        /*rs.updateObject("gender", gender+"::gender");
                         rs.updateRow();*/
                         //How to update an enum???
                     }
