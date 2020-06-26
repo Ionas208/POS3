@@ -114,7 +114,6 @@ public class EmployeeUI extends javax.swing.JFrame {
         jScrollPane1 = new javax.swing.JScrollPane();
         tbTable = new javax.swing.JTable();
         jPanel5 = new javax.swing.JPanel();
-        jPanel6 = new javax.swing.JPanel();
         lbSalHistory = new javax.swing.JLabel();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
@@ -191,14 +190,9 @@ public class EmployeeUI extends javax.swing.JFrame {
 
         getContentPane().add(jPanel2);
 
-        jPanel5.setBorder(javax.swing.BorderFactory.createTitledBorder("Statistics"));
+        jPanel5.setBorder(javax.swing.BorderFactory.createTitledBorder("Salary History"));
         jPanel5.setLayout(new java.awt.GridLayout(1, 1));
-
-        jPanel6.setBorder(javax.swing.BorderFactory.createTitledBorder("Salary History"));
-        jPanel6.setLayout(new java.awt.BorderLayout());
-        jPanel6.add(lbSalHistory, java.awt.BorderLayout.CENTER);
-
-        jPanel5.add(jPanel6);
+        jPanel5.add(lbSalHistory);
 
         getContentPane().add(jPanel5);
 
@@ -321,7 +315,6 @@ public class EmployeeUI extends javax.swing.JFrame {
     private javax.swing.JPanel jPanel3;
     private javax.swing.JPanel jPanel4;
     private javax.swing.JPanel jPanel5;
-    private javax.swing.JPanel jPanel6;
     private javax.swing.JScrollPane jScrollPane1;
     private javax.swing.JLabel lbDept;
     private javax.swing.JLabel lbManagement;
